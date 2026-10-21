@@ -252,3 +252,13 @@ def test_non_printable():
     for ordinal in range(31):
         character = chr(ordinal)
         assert cell_len(character) == 0
+
+def test_set_cell_size_beyond_grapheme_width() -> None:
+    """Test splitting text when the requested position exceeds grapheme width."""
+    zwj = chr(0x200D)
+    text = "👩" + zwj + "💻"
+
+    left, right = cells._split_text(text, 6)
+
+    assert left == text
+    assert right == ""
