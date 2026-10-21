@@ -262,8 +262,15 @@ def _split_text(
                 return text, ""
             split_index = spans[offset][0]
             return text[:split_index], text[split_index:]
+       
         if left_size < cell_position:
+            if offset >= len(spans):
+        # cell_position is beyond the text's grapheme width:
+        # grapheme widths and cell_len can disagree
+        # (e.g. zero-width joiner sequences).
+                return text, ""
             start, end, cell_size = spans[offset]
+
             if left_size + cell_size > cell_position:
                 return text[:start] + " ", " " + text[end:]
             offset += 1
